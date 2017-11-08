@@ -1,0 +1,21 @@
+/**
+ * 
+ */
+package ShortestPah;
+import GraphAPI.Graph;
+
+/**
+ * @author Jason
+ *
+ */
+public class Dijkstra {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

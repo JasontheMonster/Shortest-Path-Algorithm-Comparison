@@ -1,0 +1,30 @@
+import java.util.ArrayList;
+
+/**
+ * 
+ */
+
+/**
+ * @author Jason
+ *
+ */
+
+
+public class Node {
+	private int dist;
+	private ArrayList<Edge> adjList;
+	
+	public Node (int dist, ArrayList<Edge> adjList){
+		this.dist = dist;
+		this.adjList = adjList;
+	}
+	
+	
+	public ArrayList<Edge> getNeighbors(){
+		return adjList;
+	}
+	
+	public int getDist(){
+		return dist;
+	}
+}

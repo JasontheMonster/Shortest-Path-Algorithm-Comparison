@@ -1,0 +1,62 @@
+import java.util.ArrayList;
+
+
+/**
+ * 
+ */
+
+/**
+ * @author Jason
+ *
+ */
+
+
+public class Node {
+	private Integer dist;
+	private ArrayList<Edge> adjList;
+	private int id;
+	
+	public Node (int id, Integer dist, ArrayList<Edge> adjList){
+		this.dist = dist;
+		this.adjList = adjList;
+		this.id = id;
+	}
+	
+	
+	public ArrayList<Edge> getNeighbors(){
+		return this.adjList;
+	}
+	
+	public int getDist(){
+		return this.dist;
+	}
+	
+	public void addEdge(Node target, int weights){
+		Edge edge = new Edge (target, weights);
+		this.adjList.add(edge);
+	}
+	
+	public int getId(){
+		return this.id;
+	}
+	
+	public String toString(){
+		StringBuilder str = new StringBuilder("[ ");
+		str.append(Integer.toString(this.id)+", [");
+		
+		for (int i = 0; i<this.adjList.size(); i++){
+			Edge edge = this.adjList.get(i);
+			Node neighbor = edge.getNeighbor();
+			str.append("(" + Integer.toString(neighbor.getId()) + ",");
+			str.append(edge.toString() + ")");
+			str.append(",");
+		}
+		if (this.adjList.size()!=0){
+			str.deleteCharAt(str.length()-1);
+		}
+		str.append("] ]");
+		
+		return str.toString();
+	}
+	
+}

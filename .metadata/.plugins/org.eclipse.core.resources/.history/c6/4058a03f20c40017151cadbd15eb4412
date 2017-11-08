@@ -1,0 +1,23 @@
+
+public class Edge {
+	private int weights;
+	private Node target;
+	
+	public Edge (Node target, int weights){
+		this.target = target;
+		this.weights = weights;
+	}
+	
+	public Node getNeighbor (){
+		return this.target;
+	}
+	
+	public int getWeights (){
+		return this.weights;
+	}
+	public String toString(){
+		return Integer.toString(this.weights);
+	}
+	 
+	
+}
