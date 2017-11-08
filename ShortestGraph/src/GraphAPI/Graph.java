@@ -1,3 +1,4 @@
+package GraphAPI;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -40,9 +41,8 @@ public class Graph {
 			this.vertices.add(node);
 		}
 		
-		for (int i =0; i<this.vertices.size(); i++){
-			Node node = this.vertices.get(i);
-			for (int j=i+1; j<this.vertices.size(); j++){
+		for (Node node: this.vertices){
+			for (int j=node.getId()+1; j<this.vertices.size(); j++){
 				Node target = this.vertices.get(j);
 				if (Math.random() < prob){
 					int weight = rand.nextInt(100) + 1;
@@ -52,14 +52,23 @@ public class Graph {
 		}	
 	}
 	
+	public int numberofNodes(){
+		return this.n;
+	}
+	
+	public void modifyNode(Node node, int dist){
+		Node target = this.vertices.get(this.vertices.indexOf(node));
+		target.modify(dist); 
+	}
+	
 	/**
 	 * String representatino of Graph
 	 * @return list of [a, [(b,c)]] represent an edge between a and b with weigts c
 	 */
 	public String toString(){
 		StringBuilder str = new StringBuilder("");
-		for(int i = 0; i < this.vertices.size(); i++) {   
-			  str.append(vertices.get(i).toString());
+		for(Node node: this.vertices) {   
+			  str.append(node.toString());
 		} 
 		return str.toString();
 	}

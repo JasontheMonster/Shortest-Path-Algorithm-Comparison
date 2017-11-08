@@ -1,4 +1,6 @@
+package GraphAPI;
 import java.util.ArrayList;
+
 
 
 /**
@@ -45,6 +47,10 @@ public class Node {
 		return this.dist;
 	}
 	
+	public void modify(int d){
+		this.dist =d;
+	}
+	
 	/**
 	 * addEdge
 	 * @param target
@@ -71,8 +77,7 @@ public class Node {
 		StringBuilder str = new StringBuilder("[ ");
 		str.append(Integer.toString(this.id)+", [");
 		
-		for (int i = 0; i<this.adjList.size(); i++){
-			Edge edge = this.adjList.get(i);
+		for (Edge edge: this.adjList){
 			Node neighbor = edge.getNeighbor();
 			str.append("(" + Integer.toString(neighbor.getId()) + ",");
 			str.append(edge.toString() + ")");
@@ -85,5 +90,6 @@ public class Node {
 		
 		return str.toString();
 	}
+
 	
 }

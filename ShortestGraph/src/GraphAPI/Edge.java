@@ -1,3 +1,4 @@
+package GraphAPI;
 /**
  * @author Jason
  * Edge Class
