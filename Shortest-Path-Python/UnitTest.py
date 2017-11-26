@@ -5,15 +5,20 @@ from Bell_Ford import Bellman_Ford
 import networkx as nx
 import random 
 import time
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 
 
 class UnitTest(object): 
 
 
-    def __init__(self, negative = False):
+    def __init__(self, n, m, negative = False):
         lowerbound = 0
         size = 100
+        self.n = n
+        self.m = m
         if negative: 
             lowerbound = -100
             size = 10
@@ -21,9 +26,7 @@ class UnitTest(object):
         self.test_list =[]
 
         for i in range(10):
-            n = random.randint(1, 100)
-            m = random.randint(1, 100)
-            G = nx.gnm_random_graph(n, m, directed = True)
+            G = nx.gnm_random_graph(self.n, self.m, directed = True)
             for u, v in G.edges:
                 G[u][v]['weight'] = random.uniform(lowerbound, 100)
             self.test_list.append(G)
@@ -144,6 +147,25 @@ class UnitTest(object):
 
 
 if __name__ == "__main__":
+
+    t = []
+    b = []
+    for n in range(1, 101):
+        m = n
+        test = UnitTest(n, m)
+        test.performance(dijkstra = True)
+        t.append(test.my_time)
+        b.append(test.answer_time)
+
+
+    # evenly sampled time at 200ms intervals
+    a  = range(1, 101)
+
+    # red dashes, blue squares and green triangles
+    plt.plot(a, t, 'r--', a, b, 'bs')
+    plt.show()
+
+
     test = UnitTest()
     test.performance(dijkstra = True)
     print test.answer_time
