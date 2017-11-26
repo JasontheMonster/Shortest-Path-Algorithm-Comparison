@@ -6,7 +6,7 @@ package GraphAPI;
  */
 
 public class Edge {
-	private int weights;			//weights
+	private double weights;			//weights
 	private Node target;			//neighbors
 	
 	/**
@@ -15,7 +15,7 @@ public class Edge {
 	 * @param weights
 	 * Initialize neighbor and weight of edge
 	 */
-	public Edge (Node target, int weights){
+	public Edge (Node target, double weights){
 		this.target = target;
 		this.weights = weights;
 	}
@@ -33,7 +33,7 @@ public class Edge {
 	 * 
 	 * @return weight of edge
 	 */
-	public int getWeights (){
+	public double getWeights (){
 		return this.weights;
 	}
 	
@@ -41,7 +41,7 @@ public class Edge {
 	 * return string representation of weight
 	 */
 	public String toString(){
-		return Integer.toString(this.weights);
+		return Double.toString(this.weights);
 	}
 	 
 	

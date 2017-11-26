@@ -1,6 +1,10 @@
 package JUnitTest;
 import ShortestPath.Dijkstra;
 
+import GraphAPI.Graph;
+import GraphAPI.Node;
+
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -16,9 +20,13 @@ public class ShortestPathCorrectness {
 	 }
 
 	@Test
-	public void Dijkstra() {
+	public void shortestPaht() {
 		
-		
+		Graph dijkstra = new Graph(prob, n);
+		Dijkstra solver = new Dijkstra(dijkstra);
+		Node node = dijkstra.vertices.get(0);
+		System.out.println(dijkstra.toString());
+			
 	}
 
 }
