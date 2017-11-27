@@ -217,7 +217,7 @@ if __name__ == "__main__":
     nx_d_time = []
     #number of node range (1, 500)
     #number of edge = number of node
-    for n in range(1, 100):
+    for n in range(1, 200, 3):
         test = UnitTest(n, n)
         test.performance(dijkstra = True)
         my_d_time.append(test.my_time)
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     nx_b_time = []
     #number of node range (1, 500)
     #number of edge = number of node
-    for n in range(1, 100):
+    for n in range(1, 200, 3):
         test = UnitTest(n, n)
         test.performance(bellman_Ford = True)
         my_b_time.append(test.my_time)
@@ -237,23 +237,18 @@ if __name__ == "__main__":
 
 
 
-    '''running Time between my BellmanFord and my Dijsktra
-    my_runningtime = []
-    nx_runningtime = []
-    #number of node range (1, 500)
-    #number of edge = number of node
-    for n in range(1, 500):
-        test = UnitTest(n, n)
-        test.performance(own = True)
-        my_runningtime.append(test.d_time)
-        nx_runningtime.append(test.b_time)
-
-    '''
     # evenly sampled time at 200ms intervals
-    axis  = range(1, 100)
+    axis  = range(1, 200, 3)
 
     # yellow: my Dijkstra; blue: my Bellman_ford; red: nx's Dijkstra; green: nx's bellmanFord
-    plt.plot(axis, my_d_time, 'y--', axis, my_b_time, 'bs', axis, nx_d_time, 'ro', axis, nx_b_time, 'g^')
+    plt.plot(axis, my_d_time, 'r-', label = 'My Dijsktra') 
+    plt.plot(axis, my_b_time, 'b-', label = 'My Bellman_Ford')
+    plt.plot(axis, nx_d_time, 'c-', label = 'Networkx Dijsktra')
+    plt.plot(axis, nx_b_time, 'g-', label = 'Networkx Bellman_Ford')
+    plt.legend(loc='upper left')
+    plt.xlabel('number of nodes')
+    plt.ylabel('running time of executing 100 graphs (second)')
+    plt.savefig('comparison graph')
     plt.show()
 
 
