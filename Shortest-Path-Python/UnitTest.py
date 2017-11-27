@@ -8,73 +8,105 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-
-
+'''UnitTest for Dijkstra and Bellmand_Ford'''
 class UnitTest(object): 
 
-
-    def __init__(self, n, m, negative = False):
-        lowerbound = 0
-        size = 100
-        self.n = n
-        self.m = m
+    '''randomly generate directed graph with networkx and use my graphAPI to replicate the graph
+        if negative is True, we want to perform the size of 10 experiment of negative edges
+        else, we perform the size of 100 experiment of correctness and performance'''
+    def __init__(self, n, m, negative = False, generate = False):
+        lowerbound = 0  #lower bound of weight
+        size = 100      #sample size
+        
+        if generate:
+            self.n = random.randint(0, 100)
+            self.m = random.randint(0, 100)
+        else:
+            #for performance test
+            self.n = n      #number of nodes
+            self.m = m      #number of edges
         if negative: 
+            #expand range of weight to negative numbers
             lowerbound = -100
             size = 10
 
+        #graphs created by networks
         self.test_list =[]
 
         for i in range(10):
+            #randomly generate directed graphs 
             G = nx.gnm_random_graph(self.n, self.m, directed = True)
             for u, v in G.edges:
+                #add edges weights with range (lowerbound, 100)
                 G[u][v]['weight'] = random.uniform(lowerbound, 100)
             self.test_list.append(G)
 
+        #replicated graphs created by my graphAPI 
         self.compare_list = []
 
         for test in self.test_list:
-            g = Graph()
+            g = Graph()             #create my own graph
             for u, v in test.edges:
+                # add node and weighted edge wiht my API
                 g.addNode(u)
                 g.addNode(v)
                 g.addWeightedEdge(u, v, test[u][v]['weight'])
             self.compare_list.append(g)
 
-    '''Testing '''
-    #randomly generate 100 complete graph
+   
+    '''testing for correctness'''
     def correctness(self):
+        #initialize the boolean value for testing Dijkstra's correctness 
         boolean = True 
-        '''test for correctness'''
         print "testing for correctness of Dijkstra..."
+        #looping through graphs from my graphs and graphs by networkx
         for answer, my_graph in zip(self.test_list, self.compare_list):
-            source = min(answer.nodes())
-            length, path = nx.single_source_dijkstra(answer, source , weight = 'weight')
-            my_solution = Dijkstra(my_graph)
-            dist, path = my_solution.solver(source) 
-            
-            for k, v in dist.items():
-                if v == float("inf"):
-                    del dist[k] 
-            boolean = boolean and dist == length
+            # if the graph has no nodes, break, automatically true
+            if len(answer.nodes) >0:
+                #pick the smallest id to be source
+                source = min(answer.nodes())
+                #run networkx's dijkstra
+                length, path = nx.single_source_dijkstra(answer, source , weight = 'weight')
+                #run my dijkstra
+                my_solution = Dijkstra(my_graph)
+                dist, path = my_solution.solver(source) 
+                
+                #getting rid of all the node that cannot be reached by the source
+                for k, v in dist.items():
+                    if v == float("inf"):
+                        del dist[k] 
+
+                #testing for correctness
+                boolean = boolean and dist == length
+
 
         if boolean:
             print "Dijkstra test passed"
         else: 
             print "No"
 
+        #initialize the boolean value for testing BF's correctness 
+        boolean = True 
         print "testing for correctness of BF algorithm ..."
+        #looping through graphs from my graphs and graphs by networkx
         for answer, my_graph in zip(self.test_list, self.compare_list):
-            source = min(answer.nodes())
-            length= nx.single_source_bellman_ford_path_length(answer, source , weight = 'weight')
-            my_solution = Bellman_Ford(my_graph)
-            dist, path = my_solution.solver(source) 
-            
-            for k, v in dist.items():
-                if v == float("inf"):
-                    del dist[k] 
-            
-            boolean = boolean and dist == length
+            # if the graph has no nodes, break, automatically true
+            if len(answer.nodes) >0:
+                #pick the smallest id to be source
+                source = min(answer.nodes())
+                #run networkx's Bellman_ford
+                length= nx.single_source_bellman_ford_path_length(answer, source , weight = 'weight')
+                #run my Bellman_ford
+                my_solution = Bellman_Ford(my_graph)
+                dist, path = my_solution.solver(source) 
+                
+                #getting rid of all the node that cannot be reached by the source
+                for k, v in dist.items():
+                    if v == float("inf"):
+                        del dist[k] 
+                
+                #correctness
+                boolean = boolean and dist == length
 
         if boolean:
             print "Bellman_Ford test passed"
@@ -87,108 +119,142 @@ class UnitTest(object):
         '''test for correctness'''
         self.count = 0
         for answer, my_graph in zip(self.test_list, self.compare_list):
-            source = min(answer.nodes())
-            d_solution = Dijkstra(my_graph)
-            d_dist, path = d_solution.solver(source) 
-            
+            # if the graph has no nodes, break, automatically the same result
+            if len(answer.nodes) >0:
+                #run my Dijkstra
+                source = min(answer.nodes())
+                d_solution = Dijkstra(my_graph)
+                d_dist, path = d_solution.solver(source) 
 
+                #run my Bellman_Ford
+                b_solution = Bellman_Ford(my_graph) 
+                b_dist, path = b_solution.solver(source)
 
-            b_solution = Bellman_Ford(my_graph) 
-            b_dist, path = b_solution.solver(source)
-
-            if d_dist != b_dist:
-                self.count+=1
+                # if the results are different, increment count
+                if d_dist != b_dist:
+                    self.count+=1
 
 
     def performance(self, dijkstra = False, bellman_Ford = False, own = False):
+        #test performance between my dijskra and networks'
         if dijkstra:
             self.answer_time = 0
             self.my_time =0
             for answer, my_graph in zip(self.test_list, self.compare_list):
-                start = time.time()
-                source = min(answer.nodes)
-                length, path = nx.single_source_dijkstra(answer, source , weight = 'weight')
-                self.answer_time += time.time() - start 
+                # if the graph has no nodes, break, automatically true
+                if len(answer.nodes) >0:
+                    #measure running time for networkx' 
+                    source = min(answer.nodes)
+                    start = time.time()
+                    length, path = nx.single_source_dijkstra(answer, source , weight = 'weight')
+                    self.answer_time += time.time() - start 
 
-                my_start = time.time()
-                d_solution = Dijkstra(my_graph)
-                d_dist, path = d_solution.solver(source) 
-                self.my_time += time.time() - my_start
+                    #measure running time for my dijkstra
+                    my_start = time.time()
+                    d_solution = Dijkstra(my_graph)
+                    d_dist, path = d_solution.solver(source) 
+                    self.my_time += time.time() - my_start
 
+         #test performance between my Bellman_ford and networks'
         if bellman_Ford:
             self.answer_time = 0
             self.my_time =0
             for answer, my_graph in zip(self.test_list, self.compare_list):
-                start = time.time()
-                source = min(answer.nodes)
-                length= nx.single_source_bellman_ford_path_length(answer, source , weight = 'weight')
-                self.answer_time += time.time() - start 
+                # if the graph has no nodes, break, automatically true
+                if len(answer.nodes) >0:
+                    #measure running time for networkx'
+                    source = min(answer.nodes)
+                    start = time.time()
+                    length= nx.single_source_bellman_ford_path_length(answer, source , weight = 'weight')
+                    self.answer_time += time.time() - start 
 
-                my_start = time.time()
-                d_solution = Bellman_Ford(my_graph)
-                dist, path = d_solution.solver(source) 
-                self.my_time += time.time() - my_start
+                    #measure running time for my Bellman_Ford
+                    my_start = time.time()
+                    d_solution = Bellman_Ford(my_graph)
+                    dist, path = d_solution.solver(source) 
+                    self.my_time += time.time() - my_start
+
+         #test performance between my Bellman_ford and my Dijskra
         if own:
             self.d_time =0
             self.b_time =0
             for answer, my_graph in zip(self.test_list, self.compare_list):
-                start = time.time()
-                source = min(answer.nodes)
-                d_solution = Dijkstra(my_graph)
-                d_dist, path = d_solution.solver(source) 
-                self.d_time += time.time() - start 
+                # if the graph has no nodes, break, automatically true
+                if len(answer.nodes) >0:
+                    #measure running time for my Dijkstra
+                    source = min(answer.nodes)
+                    start = time.time()
+                    d_solution = Dijkstra(my_graph)
+                    d_dist, path = d_solution.solver(source) 
+                    self.d_time += time.time() - start 
 
-                my_start = time.time()
-                d_solution = Bellman_Ford(my_graph)
-                dist, path = d_solution.solver(source) 
-                self.b_time += time.time() - my_start
+                    #measure running time for my BellmanFord
+                    my_start = time.time()
+                    d_solution = Bellman_Ford(my_graph)
+                    dist, path = d_solution.solver(source) 
+                    self.b_time += time.time() - my_start
 
 
 
 
 if __name__ == "__main__":
 
-    t = []
-    b = []
-    for n in range(1, 101):
-        m = n
-        test = UnitTest(n, m)
-        test.performance(dijkstra = True)
-        t.append(test.my_time)
-        b.append(test.answer_time)
-
-
-    # evenly sampled time at 200ms intervals
-    a  = range(1, 101)
-
-    # red dashes, blue squares and green triangles
-    plt.plot(a, t, 'r--', a, b, 'bs')
-    plt.show()
-
-
-    test = UnitTest()
-    test.performance(dijkstra = True)
-    print test.answer_time
-    print test.my_time
-    print 
-
-    test.performance(bellman_Ford = True)
-    print test.answer_time
-    print test.my_time
-    print 
-
-    test.performance(own = True)
-    print test.d_time
-    print test.b_time
-    print 
-
+    
+    '''testing for correctness'''
+    test = UnitTest(100, 100, generate= True)
     test.correctness()
 
-    testNegative = UnitTest(negative = True)
+    '''testing for negative cycle'''
+    testNegative = UnitTest(100, 100, negative = True, generate= True)
     testNegative.negative()
     print testNegative.count
 
 
+    '''experiment with running time'''
+
+    '''running Time between my Dijkstra and networkx' dijkstra'''
+    my_d_time = []
+    nx_d_time = []
+    #number of node range (1, 500)
+    #number of edge = number of node
+    for n in range(1, 100):
+        test = UnitTest(n, n)
+        test.performance(dijkstra = True)
+        my_d_time.append(test.my_time)
+        nx_d_time.append(test.answer_time)
+
+    
+    '''running Time between my BellmanFord and networkx' Bellman_Ford'''
+    my_b_time = []
+    nx_b_time = []
+    #number of node range (1, 500)
+    #number of edge = number of node
+    for n in range(1, 100):
+        test = UnitTest(n, n)
+        test.performance(bellman_Ford = True)
+        my_b_time.append(test.my_time)
+        nx_b_time.append(test.answer_time)
+
+
+
+    '''running Time between my BellmanFord and my Dijsktra
+    my_runningtime = []
+    nx_runningtime = []
+    #number of node range (1, 500)
+    #number of edge = number of node
+    for n in range(1, 500):
+        test = UnitTest(n, n)
+        test.performance(own = True)
+        my_runningtime.append(test.d_time)
+        nx_runningtime.append(test.b_time)
+
+    '''
+    # evenly sampled time at 200ms intervals
+    axis  = range(1, 100)
+
+    # yellow: my Dijkstra; blue: my Bellman_ford; red: nx's Dijkstra; green: nx's bellmanFord
+    plt.plot(axis, my_d_time, 'y--', axis, my_b_time, 'bs', axis, nx_d_time, 'ro', axis, nx_b_time, 'g^')
+    plt.show()
 
 
 

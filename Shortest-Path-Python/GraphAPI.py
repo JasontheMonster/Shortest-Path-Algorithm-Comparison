@@ -2,9 +2,6 @@
     bag: a bag of nodes in the graph
     adjacent: dictionary {node: list of neighbors of node}
 '''
-
-
-
 class Graph(object):
 
     '''constructor initialize bag and adjacent list'''
@@ -20,17 +17,23 @@ class Graph(object):
             #add a empty adjacent list                  
             self.adjacent[node] = []
 
+    '''add a weighted edge'''
     def addWeightedEdge(self, source, target, weight):
         if source not in self.bag or target not in self.bag:
             print "there is not such node"
         else:
+            #element of adjacent list would be (neighbor, weight)
             self.adjacent.get(source).append((target, weight))
 
     
+    '''given id, get the node'''
     def getNodebyID(self, id):
         if id in self.bag:
             return self.bag[self.bag.index(id)]
         
+    '''print adjacent list 
+        node [(neighbors, weight)...,]
+    '''
     def toString(self):
         result = ""
         for node in self.bag:
