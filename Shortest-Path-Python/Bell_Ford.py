@@ -23,20 +23,17 @@ class Bellman_Ford(object):
 
         #iterating |V| -1 times to relax edges
         for i in range(1, len(self.graph.bag)):
-            for node in self.graph.bag:
-                for neighbor, weight in self.graph.adjacent[node]:
-                    #relax edges and add path tree
-                    if dist[neighbor] > dist[node] + weight:
-                        dist[neighbor] = dist[node] + weight
-                        path[neighbor] = node
+            for u, v, weight in self.graph.edges:
+                if dist[v] > dist[u] + weight:
+                    dist[v] = dist[u] + weight
+                    path[v] = u
 
         #detecting negative cycle
-        for node in self.graph.bag:
-            for neighbor, weight in self.graph.adjacent[node]:
-                if dist[node] + weight < dist[neighbor]:
-                    #if the edge is still failed to be relaxed, there is a negative cycle
-                    print "Graph has negative cycle"
-                    return None, None 
+        for u, v, weight in self.graph.edges:
+            if dist[v] > dist[u] + weight:
+                #if the edge is still failed to be relaxed, there is a negative cycle
+                print "Graph has negative cycle"
+                return None, None 
 
         return dist, path
                     
