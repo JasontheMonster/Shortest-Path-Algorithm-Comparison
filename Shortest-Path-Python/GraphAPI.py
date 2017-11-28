@@ -8,6 +8,7 @@ class Graph(object):
     def __init__(self):
         self.bag = []
         self.adjacent = {}
+        self.edges = []
 
     '''method for adding node to the graph if it is not in the graph'''
     def addNode(self, node):
@@ -24,6 +25,7 @@ class Graph(object):
         else:
             #element of adjacent list would be (neighbor, weight)
             self.adjacent.get(source).append((target, weight))
+            self.edges.append((source, target, weight))
 
     
     '''given id, get the node'''
