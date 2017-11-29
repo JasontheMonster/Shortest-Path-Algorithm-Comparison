@@ -7,6 +7,8 @@ import random
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+import timeit
+
 
 '''UnitTest for Dijkstra and Bellmand_Ford'''
 class UnitTest(object): 
@@ -145,9 +147,9 @@ class UnitTest(object):
                 if len(answer.nodes) >0:
                     #measure running time for networkx' 
                     source = min(answer.nodes)
-                    start = time.time()
+                    start = timeit.default_timer()
                     length, path = nx.single_source_dijkstra(answer, source , weight = 'weight')
-                    self.answer_time += time.time() - start 
+                    self.answer_time += timeit.default_timer()- start 
 
                     #measure running time for my dijkstra
                     my_start = time.time()
@@ -164,9 +166,9 @@ class UnitTest(object):
                 if len(answer.nodes) >0:
                     #measure running time for networkx'
                     source = min(answer.nodes)
-                    start = time.time()
+                    start = timeit.default_timer()
                     length= nx.single_source_bellman_ford_path_length(answer, source , weight = 'weight')
-                    self.answer_time += time.time() - start 
+                    self.answer_time += timeit.default_timer() - start 
 
                     #measure running time for my Bellman_Ford
                     my_start = time.time()
@@ -210,7 +212,7 @@ if __name__ == "__main__":
     testNegative = UnitTest(100, 100, negative = True, generate= True)
     testNegative.negative()
     '''print number of cases that the Dijkstsra is different from BellmanFord'''
-    print testNegative.count
+    print str(testNegative.count) + "/10"
 
 
     '''experiment with running time'''
