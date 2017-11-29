@@ -201,21 +201,24 @@ if __name__ == "__main__":
 
     
     '''testing for correctness'''
+    '''print 'test passsed' when our implementation is correct'''
     test = UnitTest(100, 100, generate= True)
     test.correctness()
 
     '''testing for negative cycle'''
+    '''print "Graph has negative cycle when one graph has negative cycle"'''
     testNegative = UnitTest(100, 100, negative = True, generate= True)
     testNegative.negative()
+    '''print number of cases that the Dijkstsra is different from BellmanFord'''
     print testNegative.count
 
 
     '''experiment with running time'''
 
-    '''running Time between my Dijkstra and networkx' dijkstra'''
+    '''running Time between my Dijkstra and networkx' dijkstra in executing 100 graphs'''
     my_d_time = []
     nx_d_time = []
-    #number of node range (1, 500)
+    #number of node range (1, 1000, 20)
     #number of edge = number of node
     for n in range(1, 1000, 20):
         test = UnitTest(n, n)
@@ -224,10 +227,10 @@ if __name__ == "__main__":
         nx_d_time.append(test.answer_time)
 
     
-    '''running Time between my BellmanFord and networkx' Bellman_Ford'''
+    '''running Time between my BellmanFord and networkx' Bellman_Ford in executing 100 graphs'''
     my_b_time = []
     nx_b_time = []
-    #number of node range (1, 500)
+    #number of node range (1, 1000, 20)
     #number of edge = number of node
     for n in range(1, 1000, 20):
         test = UnitTest(n, n)
@@ -237,14 +240,14 @@ if __name__ == "__main__":
 
 
 
-    # evenly sampled time at 200ms intervals
+    # evenly sampled time at 1000ms intervals
     axis  = range(1, 1000, 20)
 
     # yellow: my Dijkstra; blue: my Bellman_ford; red: nx's Dijkstra; green: nx's bellmanFord
     plt.plot(axis, my_d_time, 'r-', label = 'My Dijsktra') 
     plt.plot(axis, my_b_time, 'b-', label = 'My Bellman_Ford')
-    #plt.plot(axis, nx_d_time, 'c-', label = 'Networkx Dijsktra')
-    #plt.plot(axis, nx_b_time, 'g-', label = 'Networkx Bellman_Ford')
+    plt.plot(axis, nx_d_time, 'c-', label = 'Networkx Dijsktra')
+    plt.plot(axis, nx_b_time, 'g-', label = 'Networkx Bellman_Ford')
     plt.legend(loc='upper left')
     plt.xlabel('BellmanFord')
     plt.ylabel('running time of executing 100 graphs (second)')

@@ -22,15 +22,15 @@ class Dijkstra(object):
         #insert(Q,(s,0))
         dist[source] = 0
         #push all the nodes to priority queue and set the parent of them as None
+        
+        #create a path tree to resturn in the end
+        path = {}
         for node in self.graph.bag:
             heappush(priorityQ, (dist[node], node))
             path[node] = None
         #use visisted to keep track of nodes we visited 
         #X<-emptyset
         visited = []
-        #create a path tree to resturn in the end
-        path = {}
-        
        
 
         
